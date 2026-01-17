@@ -4,7 +4,8 @@ const urlsToCache = [
   "index.html",
   "manifest.json",
   "styles.css",
-  "script.js",
+  "sw.js",
+  
   // ajoute ici toutes tes images utilisées
   "images/position/ap_seugui.PNG",
   "images/position/ap_kubi.PNG",
@@ -74,6 +75,8 @@ const urlsToCache = [
   "images/pied/yop_tchagui.PNG",
 
   "images/autres/bo_joumok.PNG",
+
+  "script.js",
 ];
 
 self.addEventListener("install", event => {
