@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2c7be5">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Générateur Taekwondo</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    text-align: center;
+    padding: 20px;
+  }
+  h1 { color: #333; }
+
+  input, button {
+    font-size: 1.1rem;
+    padding: 10px 15px;
+    margin: 6px;
+  }
+
+  button {
+    background: #2c7be5;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  button:hover { background: #1a5dc9; }
+
+  #result {
+    margin-top: 20px;
+    text-align: left;
+    display: inline-block;
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .card {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  img {
+    max-width: 100%;
+    border-radius: 10px;
+    margin-top: 10px;
+    display: none;
+  }
+</style>
+</head>
+
+<body>
+
+<h1>🥋 Générateur Taekwondo</h1>
+
+<label>Poomsae maximum :</label>
+<input type="number" id="poomsaeMax" min="1" max="8" value="8">
+
+<br>
+<button onclick="genererCombinaison()">🎲 Combinaison aléatoire</button>
+<button onclick="genererSequence()">📚 Séquence (2-3 techniques)</button>
+
+<div id="result"></div>
+
+<script>
+/* ===================== DONNÉES ===================== */
+
+const data = {
+  "positions": [
+    { "id": "ap_seugui", "nom": "Ap Seugui", "poomsae": [1,2,3,4,7], "image": "images/position/ap_seugui.PNG" },
+    { "id": "ap_kubi", "nom": "Ap Kubi", "poomsae": [1,2,3,4,5,6,7,8], "image": "images/position/ap_kubi.PNG" },
+    { "id": "dwitt_kubi", "nom": "Dwitt Kubi", "poomsae": [3,4,5,6,7,8], "image": "images/position/dwitt_kubi.PNG" },
+    { "id": "owen_seugui", "nom": "Owen Seugui", "poomsae": [5], "image": "images/position/owen_seugui.PNG" },
+    { "id": "orun_seugui", "nom": "Orun Seugui", "poomsae": [5], "image": "images/position/orun_seugui.PNG" },
+    { "id": "dwitt_koa_seugui", "nom": "Dwitt Koa Seugui", "poomsae": [5,7], "image": "images/position/dwitt_koa_seugui.PNG" },
+    { "id": "naranhi_seugui", "nom": "Naranhi Seugui", "poomsae": [6], "image": "images/position/naranhi_seugui.PNG" },
+    { "id": "bom_seugui", "nom": "Bom Seugui", "poomsae": [7,8], "image": "images/position/bom_seugui.PNG" },
+    { "id": "moa_seugui", "nom": "Moa Seugui", "poomsae": [7], "image": "images/position/moa_seugui.PNG" },
+    { "id": "joutchoum_seugui", "nom": "Joutchoum Seugui", "poomsae": [7], "image": "images/position/joutchoum_seugui.PNG" }
+  ],
+  "blocages": [
+    { "id": "arae_makki", "nom": "Arae Makki", "poomsae": [1,2,3,5,6], "image": "images/blocage/arae_makki.PNG" },
+    { "id": "montong_makki", "nom": "Montong Makki", "poomsae": [4,5,7,8], "image": "images/blocage/montong_makki.PNG" },
+    { "id": "montong_an_makki", "nom": "montong An Makki", "poomsae": [1,2,3,4,5], "image": "images/blocage/montong_an_makki.PNG" },
+    { "id": "montong_bakkat_makki", "nom": "montong Bakkat Makki", "poomsae": [4,6], "image": "images/blocage/montong_bakkat_makki.PNG" },
+    { "id": "eulgoul_makki", "nom": "eulgoul Makki", "poomsae": [1,5], "image": "images/blocage/eulgoul_makki.PNG" },
+    { "id": "han_sonnal_montong_bakkat_makki", "nom": "Han Sonnal montong Bakkat Makki", "poomsae": [3,5,8], "image": "images/blocage/han_sonnal_montong_bakkat_makki.PNG" },
+    { "id": "sonnal_montong_makki", "nom": "Sonnal montong Makki", "poomsae": [4,6,8], "image": "images/blocage/sonnal_montong_makki.PNG" },
+    { "id": "batangson_noulo_makki", "nom": "Batangson Noulo Makki", "poomsae": [4], "image": "images/blocage/batangson_noulo_makki.PNG" },
+    { "id": "han_sonnal_eulgoul_pitreu_makki", "nom": "Han Sonnal eulgoul Pitreu Makki", "poomsae": [6], "image": "images/blocage/han_sonnal_eulgoul_pitreu_makki.PNG" },
+    { "id": "eulgoul_bakkat_makki", "nom": "eulgoul Bakkat Makki", "poomsae": [6], "image": "images/blocage/eulgoul_bakkat_makki.PNG" },
+    { "id": "arae_hechyo_makki", "nom": "Arae Hechyo Makki", "poomsae": [6], "image": "images/blocage/arae_hechyo_makki.PNG" },
+    { "id": "batangson_montong_makki", "nom": "Batangson montong Makki", "poomsae": [6,8], "image": "images/blocage/batangson_montong_makki.PNG" },
+    { "id": "batangson_montong_an_makki", 	"nom":"Batangson montong An Makki",	"poomsae":[7],	"image":"images/blocage/batangson_montong_an_makki.PNG"},
+    { "id":"sonnal_arae_makki","nom":"Sonnal Arae Makki","poomsae":[7],"image":"images/blocage/sonnal_arae_makki.PNG"},
+    {	"id":"keudeuro_batangson_montong_an_makki","nom":"Keudeuro Batangson montong An Makki","poomsae":[7],"image":"images/blocage/keudeuro_batangson_montong_an_makki.PNG"},
+    {	"id":"dou_bon_kawi_makki","nom":"Dou Bon Kawi Makki","poomsae":[7],"image":"images/blocage/dou_bon_kawi_makki.PNG"},
+    { "id": "montong_bakkat_palmok_hechyo_makki", "nom": "montong Bakkat Palmok Hechyo Makki", "poomsae": [7], "image": "images/blocage/montong_bakkat_palmok_hechyo_makki.PNG" },
+    { "id": "eutkeuleu_arae_makki", "nom": "Eutkeuleu Arae Makki", "poomsae": [7], "image": "images/blocage/eutkeuleu_arae_makki.PNG" },
+    { "id": "han_sonnal_montong_yop_makki", "nom": "Han Sonnal montong Yop Makki", "poomsae": [7], 	"image":"images/blocage/han_sonnal_montong_yop_makki.PNG"},
+    { "id":	"keudeuro_montong_makki",	"nom":"Keudeuro montong Makki",	"poomsae":[8],	"image":"images/blocage/keudeuro_montong_makki.PNG"},
+    { "id": "owen_santeul_makki", "nom": "Owen Santeul Makki", "poomsae": [8], "image": "images/blocage/owen_santeul_makki.png" },
+    { "id": "orun_santeul_makki", "nom": "Orun Santeul Makki", "poomsae": [8], "image": "images/blocage/orun_santeul_makki.PNG" },
+    { "id": "keudeuro_arae_makki", "nom": "Keudeuro Arae Makki", "poomsae": [8], "image": "images/blocage/keudeuro_arae_makki.PNG" }
+  ],
+  "coups_main": [
+    { "id": "montong_bandae_jileugui", "nom": "montong Bandae jileugui", "poomsae": [1,2,8], "image": "images/main/montong_bandae_jileugui.PNG" },
+    { "id": "montong_baro_jileugui", "nom": "montong Baro jileugui", "poomsae": [1,3,4,6,8], "image": "images/main/montong_baro_jileugui.PNG" },
+    { "id": "eulgoul_bandae_jileugui", "poomsae": [2], "nom": "eulgoul Bandae jileugui", "image": "images/main/eulgoul_bandae_jileugui.PNG" },
+    { "id": "eulgoul_baro_jileugui", "poomsae": [2], "nom": "eulgoul Baro jileugui", "image": "images/main/eulgoul_baro_jileugui.PNG" },
+    { "id": "montong_dou_bon_jileugui", "poomsae": [3,4,8], "nom": "montong Dou Bon jileugui", "image": "images/main/montong_dou_bon_jileugui.PNG" },
+    { "id": "pyon_sonn_keut_seo_jileugui", "poomsae": [4], "nom": "Pyon Sonn Keut Seo jileugui", 	"image":"images/main/pyon_sonn_keut_seo_jileugui.PNG"},
+    { "id": "yop_jileugui", "nom": "Yop jileugui", "poomsae": [7], "image": "images/main/yop_jileugui.PNG" },
+    { "id": "dang_kyeu_teuk_jileugui", "nom": "Dang Kyeu Teuk Jileugui", "poomsae": [8], "image": "images/main/dang_kyeu_teuk_jileugui.PNG" },
+
+    { "id": "han_sonnal_jebipoum_mok_tchigui", "nom": "Han Sonnal Jebipoum Mok Tchigui", "poomsae": [3], "image": "images/main/han_sonnal_jebipoum_mok_tchigui.PNG" },
+    { "id": "jebipoum_mok_tchigui", "nom": "Jebipoum Mok Tchigui", "poomsae": [4], "image": "images/main/jebipoum_mok_tchigui.PNG" },
+    { "id": "deung_joumok_eulgoul_ap_tchigui", "nom": "Deung Joumok Eulgoul Ap Tchigui", "poomsae": [4,5,8], "image": "images/main/deung_joumok_eulgoul_ap_tchigui.PNG" },
+    { "id": "me_joumok_nelyo_tchigui", "nom": "Me Joumok Nelyo Tchigui", "poomsae": [5], "image": "images/main/me_joumok_nelyo_tchigui.PNG" },
+    { "id": "palkoup_pyyo_jeuk_tchigui", "nom": "Palkoup Pyyo Jeuk Tchigui", "poomsae": [6], "image": "images/main/palkoup_pyo_jeuk_tchigui.PNG" },
+    {	"id": "keudeuro_deung_joumok_eulgoul_ap_tchigui","nom":"Keudeuro Deung Joumok Eulgoul Ap Tchigui","poomsae":[7],"image":"images/main/keudeuro_deung_joumok_eulgoul_ap_tchigui.PNG"},
+    {	"id": "owen_mourop_tchigui","nom":"Owen Mourop Tchigui","poomsae":[7],"image":"images/main/owen_mourop_tchigui.PNG"},
+    { "id": "oren_mourop_tchigui","nom":"Oren Mourop Tchigui","poomsae":[7],"image":"images/main/oren_mourop_tchigui.png"},
+    { "id": "wen_joumok_eulgoul_bakkat_tchigui", "nom": "Wen Joumok Eulgoul Bakkat Tchigui", "poomsae": [7], "image": "images/main/wen_joumok_eulgoul_bakkat_tchigui.PNG" },
+    { "id": "oren_joumok_eulgoul_bakkat_tchigui", "nom": "Oren Joumok Eulgoul Bakkat Tchigui", "poomsae": [7], "image": "images/main/oren_joumok_eulgoul_bakkat_tchigui.png" },
+    { "id": "palkoup_eulgoul_dolyo_tchigui", "nom": "Palkoup Eulgoul Dolyo Tchigui", "poomsae": [8], "image": "images/main/palkoup_eulgoul_dolyo_tchigui.PNG" },
+  ],
+  "coups_pied": [
+    { "id": "ap_tchagui", "nom": "Ap tchagui", "poomsae": [1,2,3,5,6,7,8], "image": "images/pied/ap_tchagui.PNG" },
+    { "id": "bandal_tchagui", "nom": "Bandal tchagui", "poomsae": [1], "image": "images/pied/bandal_tchagui.PNG" },
+    { "id": "yop_tchagui", "nom": "Yop tchagui", "poomsae": [4,5], "image": "images/pied/yop_tchagui.PNG" },
+    { "id": "dollyo_tchagui", "nom": "Dollyo tchagui", "poomsae": [6], "image": "images/pied/dollyo_tchagui.PNG" },
+    { "id": "oren_pyo_jeuk_tchagui", "nom": "Oren Pyo Jeuk Tchagui", "poomsae": [7], "image": "images/pied/oren_pyo_jeuk_tchagui.PNG" },
+    { "id": "wen_pyo_jeuk_tchagui", "nom": "Wen Pyo Jeuk Tchagui", "poomsae": [7], "image": "images/pied/wen_pyo_jeuk_tchagui.PNG" },
+    { "id": "dou_bal_dang_sang_ap_tchagui", "nom": "Dou Bal Dang Sang Ap Tchagui", "poomsae": [8], "image": "images/pied/dou_bal_dang_sang_ap_tchagui.PNG" },
+    { "id": "ap_robalyoligui", "nom": "Ap Robalyoligui", "poomsae": [4], "image": "images/pied/ap_robalyoligui.PNG" },
+    { "id": "an_nelyo_tchagui", "nom": "An Nelyo tchagui", "poomsae": [8], "image": "images/pied/an_nelyo_tchagui.PNG" },
+    { "id": "bakkat_nelyo_tchagui", "nom": "Bakkat Nelyo tchagui", "poomsae": [8], "image": "images/pied/bakkat_nelyo_tchagui.PNG" }
+  ],
+  "speciaux" : [
+    { "id": "y_oh_tchagui", "nom": "Y oh-tchagui", "poomsae": [8], "image": "images/autres/y_oh_tchagui.PNG" },
+    { "id": "so_koh_tchagui", "nom": "So Koh Tchagui", "poomsae": [8], "image": "images/autres/so_koh_tchagui.PNG" },
+    { "id": "y_oh_so_koh_tchagui", "nom": "Y oh So Koh Tchagui", "poomsae": [8], "image": "images/autres/y_oh_so_koh_tchagui.PNG" },
+    { "id": "bo_joumok", "nom": "Bo Joumok", "poomsae": [7], 	"image":"images/autres/bo_joumok.PNG"}
+  ]
+};
+
+/* ===================== OUTILS ===================== */
+
+function filtrerParPoomsae(liste, max) {
+  return liste.filter(t => t.poomsae.some(p => p <= max));
+}
+
+function randomItem(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+/* ===================== AFFICHAGE ===================== */
+
+function afficher(items) {
+  const result = document.getElementById("result");
+  result.innerHTML = "";
+
+  items.forEach((item, index) => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const posImgId = `pos_img_${index}`;
+    const actImgId = `act_img_${index}`;
+
+    card.innerHTML = `
+      <strong>${index + 1}. ${item.texte}</strong><br><br>
+
+      <button onclick="toggleImage('${posImgId}', this)">
+        Afficher l'indice position
+      </button>
+      ${item.positionImage ? `<img id="${posImgId}" src="${item.positionImage}">` : ""}
+
+      <br><br>
+
+      <button onclick="toggleImage('${actImgId}', this)">
+        Afficher l'indice technique
+      </button>
+      ${item.actionImage ? `<img id="${actImgId}" src="${item.actionImage}">` : ""}
+    `;
+
+    result.appendChild(card);
+  });
+}
+
+
+
+function toggleImage(id, btn) {
+  const img = document.getElementById(id);
+  if (!img) return;
+
+  const isHidden = getComputedStyle(img).display === "none";
+
+  if (isHidden) {
+    img.style.display = "block";
+    btn.innerText = "Cacher l’indice";
+  } else {
+    img.style.display = "none";
+    btn.innerText = "Afficher l’indice";
+  }
+}
+
+/* ===================== GÉNÉRATEURS ===================== */
+
+function genererCombinaison() {
+  const max = +document.getElementById("poomsaeMax").value;
+
+  const position = randomItem(filtrerParPoomsae(data.positions, max));
+
+  const actions = [
+    ...filtrerParPoomsae(data.blocages, max),
+    ...filtrerParPoomsae(data.coups_main, max),
+    ...filtrerParPoomsae(data.coups_pied, max)
+  ];
+
+  const action = randomItem(actions);
+
+  console.log(position.image, action.image);
+
+  afficher([{
+    texte: `${position.nom} + ${action.nom}`,
+    positionImage: position.image,
+    actionImage: action.image
+  }]);
+}
+
+function genererSequence() {
+  const max = +document.getElementById("poomsaeMax").value;
+  const longueur = Math.random() < 0.5 ? 2 : 3;
+
+  const positions = filtrerParPoomsae(data.positions, max);
+  const blocs = filtrerParPoomsae(data.blocages, max);
+  const mains = filtrerParPoomsae(data.coups_main, max);
+  const pieds = filtrerParPoomsae(data.coups_pied, max);
+
+  const schema = longueur === 2
+    ? [blocs, mains]
+    : [blocs, mains, pieds];
+
+  const sequence = schema.map(actions => {
+    const action = randomItem(actions);
+    const position = randomItem(positions);
+
+
+    return {
+      texte: `${position.nom} + ${action.nom}`,
+      positionImage: position.image,
+      actionImage: action.image
+    };
+  });
+
+  afficher(sequence);
+}
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("sw.js")
+      .then(() => console.log("Service Worker enregistré !"))
+      .catch(err => console.log("Erreur SW :", err));
+  });
+}
+</script>
+
+
+
+</body>
+</html>
