@@ -76,15 +76,13 @@
 
 const data = {
   "positions": [
-    { "id": "ap_seugui", "nom": "Ap Seugui", "poomsae": [1,2,3,4,7], "image": "images/position/ap_seugui.PNG" },
+    { "id": "ap_seugui", "nom": "Ap Seugui", "poomsae": [1,2,3,4,7], "image": "images/position/ap_seugui.PNG", "video": "videos/position/ap_seugui.mp4" },
     { "id": "ap_kubi", "nom": "Ap Kubi", "poomsae": [1,2,3,4,5,6,7,8], "image": "images/position/ap_kubi.PNG" },
     { "id": "dwitt_kubi", "nom": "Dwitt Kubi", "poomsae": [3,4,5,6,7,8], "image": "images/position/dwitt_kubi.PNG" },
     { "id": "owen_seugui", "nom": "Owen Seugui", "poomsae": [5], "image": "images/position/owen_seugui.PNG" },
     { "id": "orun_seugui", "nom": "Orun Seugui", "poomsae": [5], "image": "images/position/orun_seugui.PNG" },
     { "id": "dwitt_koa_seugui", "nom": "Dwitt Koa Seugui", "poomsae": [5,7], "image": "images/position/dwitt_koa_seugui.PNG" },
-    { "id": "naranhi_seugui", "nom": "Naranhi Seugui", "poomsae": [6], "image": "images/position/naranhi_seugui.PNG" },
     { "id": "bom_seugui", "nom": "Bom Seugui", "poomsae": [7,8], "image": "images/position/bom_seugui.PNG" },
-    { "id": "moa_seugui", "nom": "Moa Seugui", "poomsae": [7], "image": "images/position/moa_seugui.PNG" },
     { "id": "joutchoum_seugui", "nom": "Joutchoum Seugui", "poomsae": [7], "image": "images/position/joutchoum_seugui.PNG" }
   ],
   "blocages": [
@@ -140,17 +138,19 @@ const data = {
     { "id": "yop_tchagui", "nom": "Yop tchagui", "poomsae": [4,5], "image": "images/pied/yop_tchagui.PNG" },
     { "id": "dollyo_tchagui", "nom": "Dollyo tchagui", "poomsae": [6], "image": "images/pied/dollyo_tchagui.PNG" },
     { "id": "oren_pyo_jeuk_tchagui", "nom": "Oren Pyo Jeuk Tchagui", "poomsae": [7], "image": "images/pied/oren_pyo_jeuk_tchagui.PNG" },
-    { "id": "wen_pyo_jeuk_tchagui", "nom": "Wen Pyo Jeuk Tchagui", "poomsae": [7], "image": "images/pied/wen_pyo_jeuk_tchagui.png" },
-    { "id": "dou_bal_dang_sang_ap_tchagui", "nom": "Dou Bal Dang Sang Ap Tchagui", "poomsae": [8], "image": "images/pied/dou_bal_dang_sang_ap_tchagui.PNG" },
+    { "id": "wen_pyo_jeuk_tchagui", "nom": "Wen Pyo Jeuk Tchagui", "poomsae": [7], "image": "images/pied/wen_pyo_jeuk_tchagui.PNG" },
+    { "id": "dou_bal_dang_sang_ap_tchagui", "nom": "Dou Bal Dang Sang Ap Tchagui", "poomsae": [8], "description": "Double coup de pied sans poser" },
     { "id": "ap_robalyoligui", "nom": "Ap Robalyoligui", "poomsae": [4], "image": "images/pied/ap_robalyoligui.PNG" },
     { "id": "an_nelyo_tchagui", "nom": "An Nelyo tchagui", "poomsae": [8], "image": "images/pied/an_nelyo_tchagui.PNG" },
     { "id": "bakkat_nelyo_tchagui", "nom": "Bakkat Nelyo tchagui", "poomsae": [8], "image": "images/pied/bakkat_nelyo_tchagui.PNG" }
   ],
   "speciaux" : [
-    { "id": "y_oh_tchagui", "nom": "Y oh-tchagui", "poomsae": [8], "image": "images/autres/y_oh_tchagui.PNG" },
-    { "id": "so_koh_tchagui", "nom": "So Koh Tchagui", "poomsae": [8], "image": "images/autres/so_koh_tchagui.PNG" },
-    { "id": "y_oh_so_koh_tchagui", "nom": "Y oh So Koh Tchagui", "poomsae": [8], "image": "images/autres/y_oh_so_koh_tchagui.PNG" },
-    { "id": "bo_joumok", "nom": "Bo Joumok", "poomsae": [7], 	"image":"images/autres/bo_joumok.PNG"}
+    { "id": "y_oh_tchagui", "nom": "Y oh-tchagui", "poomsae": [8], "description": "Une seule technique avec jambes differentes" },
+    { "id": "so_koh_tchagui", "nom": "So Koh Tchagui", "poomsae": [8], "description": "Deux techniques avec jambe identique" },
+    { "id": "y_oh_so_koh_tchagui", "nom": "Y oh So Koh Tchagui", "poomsae": [8], "description": "Deux techniques avec jambes differentes"},
+    { "id": "bo_joumok", "nom": "Bo Joumok", "poomsae": [7], 	"image":"images/autres/bo_joumok.PNG"},
+    { "id": "naranhi_seugui", "nom": "Naranhi Seugui", "poomsae": [6], "image": "images/position/naranhi_seugui.PNG" },
+    { "id": "moa_seugui", "nom": "Moa Seugui", "poomsae": [7], "image": "images/position/moa_seugui.PNG" }
   ]
 };
 
@@ -176,26 +176,72 @@ function afficher(items) {
 
     const posImgId = `pos_img_${index}`;
     const actImgId = `act_img_${index}`;
+    const posVidId = `pos_vid_${index}`;
+    const actVidId = `act_vid_${index}`;
+    const descId   = `desc_${index}`;
+
+    const hasActionMedia = item.actionImage || item.actionVideo;
 
     card.innerHTML = `
       <strong>${index + 1}. ${item.texte}</strong><br><br>
 
-      <button onclick="toggleImage('${posImgId}', this)">
-        Afficher l'indice position
-      </button>
-      ${item.positionImage ? `<img id="${posImgId}" src="${item.positionImage}">` : ""}
+      <!-- ===== POSITION ===== -->
+      ${item.positionImage ? `
+        <button onclick="toggleImage('${posImgId}', this)">
+          🖼️ Indice position
+        </button>
+        <img id="${posImgId}" src="${item.positionImage}" style="display:none">
 
-      <br><br>
+        ${item.positionVideo ? `
+          <button onclick="toggleVideo('${posVidId}', this)">
+            🎥 Vidéo position
+          </button>
+          <video id="${posVidId}" controls
+            style="display:none; width:100%; border-radius:10px;">
+            <source src="${item.positionVideo}" type="video/mp4">
+          </video>
+        ` : ""}
 
-      <button onclick="toggleImage('${actImgId}', this)">
-        Afficher l'indice technique
-      </button>
-      ${item.actionImage ? `<img id="${actImgId}" src="${item.actionImage}">` : ""}
+        <br><br>
+      ` : ""}
+
+      <!-- ===== ACTION ===== -->
+      ${hasActionMedia ? `
+        ${item.actionImage ? `
+          <button onclick="toggleImage('${actImgId}', this)">
+            🖼️ Indice technique
+          </button>
+          <img id="${actImgId}" src="${item.actionImage}" style="display:none">
+        ` : ""}
+
+        ${item.actionVideo ? `
+          <button onclick="toggleVideo('${actVidId}', this)">
+            🎥 Vidéo technique
+          </button>
+          <video id="${actVidId}" controls
+            style="display:none; width:100%; border-radius:10px;">
+            <source src="${item.actionVideo}" type="video/mp4">
+          </video>
+        ` : ""}
+        <br><br>
+      ` : `
+        ${item.description ? `
+          <button onclick="toggleDescription('${descId}', this)">
+            💡 Afficher l’indice
+          </button>
+          <div id="${descId}" style="display:none; margin-top:8px;">
+            <em>📝 ${item.description}</em>
+          </div>
+        ` : ""}
+      `}
     `;
 
     result.appendChild(card);
   });
 }
+
+
+
 
 
 
@@ -214,28 +260,57 @@ function toggleImage(id, btn) {
   }
 }
 
+function toggleDescription(id, btn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+
+  const hidden = getComputedStyle(el).display === "none";
+
+  if (hidden) {
+    el.style.display = "block";
+    btn.innerText = "Cacher l’indice";
+  } else {
+    el.style.display = "none";
+    btn.innerText = "Afficher l’indice";
+  }
+}
+
 /* ===================== GÉNÉRATEURS ===================== */
 
 function genererCombinaison() {
   const max = +document.getElementById("poomsaeMax").value;
+  if (Math.random() < 1-0.67 && max >= 6){
+    const action = randomItem(filtrerParPoomsae(data.speciaux, max));
+    console.log(action.image);
+    afficher([{
+      texte: `${action.nom}`,
+      actionImage: action.image,
+      video : action.video,
+      description: action.description
+    }]);
+  }else {
+    const position = randomItem(filtrerParPoomsae(data.positions, max));
 
-  const position = randomItem(filtrerParPoomsae(data.positions, max));
+    const actions = [
+      ...filtrerParPoomsae(data.blocages, max),
+      ...filtrerParPoomsae(data.coups_main, max),
+      ...filtrerParPoomsae(data.coups_pied, max),
+    ];
 
-  const actions = [
-    ...filtrerParPoomsae(data.blocages, max),
-    ...filtrerParPoomsae(data.coups_main, max),
-    ...filtrerParPoomsae(data.coups_pied, max)
-  ];
+    const action = randomItem(actions);
 
-  const action = randomItem(actions);
+    console.log(position.image, action.image);
 
-  console.log(position.image, action.image);
+    afficher([{
+      texte: `${position.nom} + ${action.nom}`,
+      positionImage: position.image,
+      actionImage: action.image,
+      video: action.video || position.video,
+      description: action.description
+    }]);
+  }
+  
 
-  afficher([{
-    texte: `${position.nom} + ${action.nom}`,
-    positionImage: position.image,
-    actionImage: action.image
-  }]);
 }
 
 function genererSequence() {
@@ -259,8 +334,11 @@ function genererSequence() {
     return {
       texte: `${position.nom} + ${action.nom}`,
       positionImage: position.image,
-      actionImage: action.image
+      actionImage: action.image,
+      video: action.video || position.video,
+      description: action.description
     };
+
   });
 
   afficher(sequence);
@@ -280,4 +358,3 @@ if ("serviceWorker" in navigator) {
 
 </body>
 </html>
-
